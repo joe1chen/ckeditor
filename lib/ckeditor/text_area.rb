@@ -34,7 +34,15 @@ module Ckeditor
 
       def render(input)
         output_buffer << input
-        output_buffer << javascript_tag(Utils.js_replace(options['id'], ck_options))
+
+        js_content_for_section = ck_options.delete('js_content_for')
+        js = Utils.js_replace(options['id'], ck_options)
+        if js_content_for_section
+          content_for(js_content_for_section) { js.html_safe }
+        else
+          output_buffer << javascript_tag(js)
+        end
+
         output_buffer
       end
 
